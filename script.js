@@ -1,96 +1,127 @@
-// 1. ANIMACIÓN DEL CORAZÓN
+// 1. ANIMACIÓN DEL CORAZÓN Y CAMBIO DE PANTALLA
 function animarCorazon() {
-  const corazonBtn = document.getElementById('corazon-btn');
-  corazonBtn.classList.add('llenar');
+    const corazonBtn = document.getElementById('corazon-btn');
+    const bienvenida = document.getElementById('pantalla-bienvenida');
+    const principal = document.getElementById('pantalla-principal');
 
-  setTimeout(() => {
-    document.getElementById('pantalla-bienvenida').classList.add('hidden');
-    document.getElementById('pantalla-principal').classList.remove('hidden');
-    revisarScroll();
-  }, 900);
+    // Activa el llenado del corazón
+    corazonBtn.classList.add('llenar');
+
+    // Oculta la bienvenida y muestra el contenido principal
+    setTimeout(() => {
+        bienvenida.classList.add('hidden');
+        bienvenida.classList.remove('active');
+
+        principal.classList.add('active');
+        principal.classList.remove('hidden');
+
+        // Reproducir música
+        const audio = document.getElementById('cancion');
+        if (audio) {
+            audio.play().catch(e => console.log("Audio block:", e));
+        }
+
+        // Forzamos la visibilidad de los primeros elementos
+        revisarScroll();
+    }, 800);
 }
 
 // 2. REVELACIÓN AL HACER SCROLL
 function revisarScroll() {
-  const elementos = document.querySelectorAll('.fade-in-scroll');
-  const alturaPantalla = window.innerHeight;
+    const elementos = document.querySelectorAll('.fade-in-scroll');
+    const alturaPantalla = window.innerHeight;
 
-  elementos.forEach(el => {
-    const posicionTop = el.getBoundingClientRect().top;
-    if (posicionTop < alturaPantalla - 40) {
-      el.classList.add('visible');
-    }
-  });
+    elementos.forEach(el => {
+        const posicionTop = el.getBoundingClientRect().top;
+        if (posicionTop < alturaPantalla - 30) {
+            el.classList.add('visible');
+        }
+    });
 }
 
 window.addEventListener('scroll', revisarScroll);
 
 // 3. CARRUSEL CONTINUO (5 FOTOS)
 const fotos = [
-  'fotos/foto1.jpg',
-  'fotos/foto2.jpg',
-  'fotos/foto3.jpg',
-  'fotos/foto4.jpg',
-  'fotos/foto5.jpg'
+    'fotos/foto1.jpg',
+    'fotos/foto2.jpg',
+    'fotos/foto3.jpg',
+    'fotos/foto4.jpg',
+    'fotos/foto5.jpg'
 ];
+
 let fotoActual = 0;
 
 function cambiarFoto(direccion) {
-  const img = document.getElementById('img-carrusel');
-  const contador = document.getElementById('contador-fotos');
-  
-  img.style.opacity = '0';
-
-  setTimeout(() => {
     fotoActual += direccion;
-    
+    if (fotoActual >= fotos.length) {
+        fotoActual = 0;
+    }
     if (fotoActual < 0) {
-      fotoActual = fotos.length - 1;
-    } else if (fotoActual >= fotos.length) {
-      fotoActual = 0;
+        fotoActual = fotos.length - 1;
     }
-
-    img.src = fotos[fotoActual];
-    contador.textContent = `${fotoActual + 1} / ${fotos.length}`;
-    img.style.opacity = '1';
-  }, 250);
-}
-
-// 4. CONTROL DE MÚSICA ("MI NIÑA BONITA")
-function toggleMusica() {
-  const audio = document.getElementById('cancion');
-  const btn = document.querySelector('.btn-play');
-  
-  if (audio.paused) {
-    audio.play();
-    btn.textContent = '❚❚ Pausar';
-  } else {
-    audio.pause();
-    btn.textContent = '▶ Reproducir';
-  }
-}
-
-// 5. TRIVIA INTERACTIVA CON CONFETI
-function responder(boton, esCorrecta) {
-  if (esCorrecta) {
-    boton.classList.add('correcta');
     
-    if (typeof confetti === 'function') {
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+    const carruselImg = document.getElementById('carrusel-img');
+    if (carruselImg) {
+        carruselImg.src = fotos[fotoActual];
+    }
+}
+
+// Cambia automáticamente de foto cada 3.5 segundos
+setInterval(() => {
+    cambiarFoto(1);
+}, 3500);
+
+// 4. CONTROL DEL REPRODUCTOR DE MÚSICA
+function reproducirMusica() {
+    const cancion = document.getElementById('cancion');
+    const btnPlay = document.getElementById('btn-play');
+
+    if (cancion.paused) {
+        cancion.play();
+        if (btnPlay) btnPlay.innerText = '⏸ Pausar Canción';
+    } else {
+        cancion.pause();
+        if (btnPlay) btnPlay.innerText = '▶ Escuchar nuestra canción';
+    }
+}
+
+// 5. TRIVIA INTERACTIVA (3 PREGUNTAS)
+const respuestasCorrectas = {
+    p1: 'b',
+    p2: 'b',
+    p3: 'b'
+};
+
+function verificarTrivia() {
+    let correctas = 0;
+    const totalPreguntas = 3;
+
+    for (let i = 1; i <= totalPreguntas; i++) {
+        const opciones = document.getElementsByName('p' + i);
+        for (let opcion of opciones) {
+            if (opcion.checked && opcion.value === respuestasCorrectas['p' + i]) {
+                correctas++;
+            }
+        }
     }
 
-    setTimeout(() => {
-      document.getElementById('quiz-container').classList.add('hidden');
-      document.getElementById('premio').classList.remove('hidden');
-    }, 800);
-  } else {
-    boton.classList.add('incorrecta');
-    setTimeout(() => {
-      boton.classList.remove('incorrecta');
-    }, 600);
-  }
+    const resultadoDiv = document.getElementById('resultado-trivia');
+    if (resultadoDiv) {
+        resultadoDiv.classList.remove('hidden');
+        if (correctas === totalPreguntas) {
+            resultadoDiv.style.backgroundColor = '#e8f5e9';
+            resultadoDiv.style.color = '#2e7d32';
+            resultadoDiv.innerHTML = '✨ ¡Increíble! Acertaste todas las preguntas. ¡Ganaste el Vale Especial!';
+            
+            const valeRegalo = document.getElementById('vale-regalo');
+            if (valeRegalo) {
+                valeRegalo.classList.remove('hidden');
+            }
+        } else {
+            resultadoDiv.style.backgroundColor = '#ffebee';
+            resultadoDiv.style.color = '#c62828';
+            resultadoDiv.innerHTML = `Tuviste ${correctas} de ${totalPreguntas} correctas. ¡Inténtalo de nuevo, mi amor! 💕`;
+        }
+    }
 }
