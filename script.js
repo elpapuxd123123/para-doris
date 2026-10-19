@@ -12,21 +12,29 @@ function animarCorazon() {
         if (bienvenida) bienvenida.classList.add('hidden');
         if (principal) principal.classList.remove('hidden');
 
-        // Intentar reproducir música sin detener la pantalla si falla
+        // Intentar reproducir música
         const audio = document.getElementById('cancion');
         const btnPlay = document.getElementById('btn-play');
         if (audio) {
             audio.play().then(() => {
                 if (btnPlay) btnPlay.innerText = '⏸ Pausar Canción';
             }).catch(e => {
-                console.log("El navegador requiere presionar el botón de play para la música:", e);
+                console.log("Audio autostart bloqueado por el navegador:", e);
             });
         }
 
-        // Mostrar elementos de la pantalla
+        // Forzar visibilidad de elementos
         revisarScroll();
     }, 600);
 }
+
+// Escucha directa por evento para máxima compatibilidad
+document.addEventListener('DOMContentLoaded', () => {
+    const corazonBtn = document.getElementById('corazon-btn');
+    if (corazonBtn) {
+        corazonBtn.addEventListener('click', animarCorazon);
+    }
+});
 
 // 2. REVELACIÓN AL HACER SCROLL
 function revisarScroll() {
@@ -114,6 +122,10 @@ function seleccionarPlan(nombrePlan) {
     if (planConfirmado) planConfirmado.innerText = `❤️ Vale por: ${nombrePlan}`;
     if (premio) premio.classList.remove('hidden');
 
+    if (typeof confetti === 'function') {
+        confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
+    }
+}
     if (typeof confetti === 'function') {
         confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
     }
