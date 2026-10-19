@@ -12,16 +12,18 @@ function animarCorazon() {
         if (bienvenida) bienvenida.classList.add('hidden');
         if (principal) principal.classList.remove('hidden');
 
-        // Reproducir música
+        // Intentar reproducir música sin detener la pantalla si falla
         const audio = document.getElementById('cancion');
         const btnPlay = document.getElementById('btn-play');
         if (audio) {
             audio.play().then(() => {
                 if (btnPlay) btnPlay.innerText = '⏸ Pausar Canción';
-            }).catch(e => console.log("Audio block:", e));
+            }).catch(e => {
+                console.log("El navegador requiere presionar el botón de play para la música:", e);
+            });
         }
 
-        // Forzar visibilidad
+        // Mostrar elementos de la pantalla
         revisarScroll();
     }, 600);
 }
