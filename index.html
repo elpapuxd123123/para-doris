@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Doris - 1er Mes</title>
+  
+  <!-- Tipografía Playfair Display y Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- PANTALLA 1: BIENVENIDA -->
+  <div id="pantalla-bienvenida" class="pantalla active">
+    <div class="tarjeta-bienvenida fade-in-element">
+      <p class="subtitulo">TIENES UN REGALO</p>
+      <h1 class="titulo-serif">Doris ❤️</h1>
+      <p class="remitente">De: Jhon</p>
+      <p class="instruccion">Toca el corazón para descubrir tu regalo:</p>
+      
+      <!-- Corazón SVG con animación -->
+      <div id="corazon-btn" onclick="animarCorazon()">
+        <svg viewBox="0 0 24 24" class="corazon-svg">
+          <path class="corazon-fill" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 2: CONTENIDO PRINCIPAL -->
+  <div id="pantalla-principal" class="pantalla hidden">
+    <div class="container">
+      
+      <!-- ENCABEZADO -->
+      <header class="header-regalo fade-in-scroll">
+        <h2 class="titulo-serif">Doris y Jhon</h2>
+        <p class="fecha-badge">1er Mes • 19 de Octubre</p>
+      </header>
+
+      <!-- GALERÍA DE FOTOS (5 FOTOS) -->
+      <section class="seccion galeria fade-in-scroll">
+        <p class="tag-seccion">GALERÍA</p>
+        <h3 class="titulo-serif">Momentos que no se borran</h3>
+        <div class="carrusel">
+          <div class="img-wrapper">
+            <img id="img-carrusel" src="fotos/foto1.jpg" alt="Nuestro Momento">
+          </div>
+          <div class="controles-carrusel">
+            <button class="btn-rosa" onclick="cambiarFoto(-1)">❮ Anterior</button>
+            <span id="contador-fotos">1 / 5</span>
+            <button class="btn-rosa" onclick="cambiarFoto(1)">Siguiente ❯</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPRODUCTOR DE MÚSICA (MI NIÑA BONITA) -->
+      <section class="seccion audio-player fade-in-scroll">
+        <p class="tag-seccion">NUESTRA CANCIÓN</p>
+        <div class="card-audio">
+          <img src="fotos/album.jpg" class="cover-audio" alt="Mi Niña Bonita">
+          <div class="info-audio">
+            <h4 class="titulo-serif">Mi Niña Bonita</h4>
+            <p class="artista">Chino & Nacho</p>
+            <audio id="cancion" src="musica/mi_nina_bonita.mp3"></audio>
+            <button class="btn-rosa btn-play" onclick="toggleMusica()">▶ Reproducir</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARTA DE AMOR -->
+      <section class="seccion carta fade-in-scroll">
+        <p class="tag-seccion">CARTA</p>
+        <h3 class="titulo-serif">Hola, mi amor ❤️</h3>
+        <p class="texto-carta">
+          Si estás leyendo esto es porque quería regalarte algo único. 
+          Gracias por cada sonrisa, risa y momento inolvidable que hemos compartido en este mes. 
+          Gracias por estar a mi lado y hacer que cada día sea más bonito. ¡Te quiero mucho!
+        </p>
+      </section>
+
+      <!-- LÍNEA DE TIEMPO -->
+      <section class="seccion linea-tiempo fade-in-scroll">
+        <p class="tag-seccion">RECUERDOS</p>
+        <h3 class="titulo-serif">Nuestra línea del tiempo ⏳</h3>
+        
+        <div class="tarjeta-linea">
+          <div class="punto-linea"></div>
+          <div class="contenido-linea">
+            <div class="header-linea">
+              <img src="fotos/hito1.jpg" class="avatar-linea" alt="El día que nos conocimos">
+              <div>
+                <span class="fecha-linea">19 DE SEPTIEMBRE</span>
+                <h4 class="titulo-serif">El día que nos conocimos</h4>
+              </div>
+            </div>
+            <p>Aquel primer momento donde cruzamos palabras y comenzó esta bonita química entre nosotros.</p>
+          </div>
+        </div>
+
+        <div class="tarjeta-linea">
+          <div class="punto-linea"></div>
+          <div class="contenido-linea">
+            <div class="header-linea">
+              <img src="fotos/hito2.jpg" class="avatar-linea" alt="Nuestra primera cita">
+              <div>
+                <span class="fecha-linea">28 DE SEPTIEMBRE</span>
+                <h4 class="titulo-serif">Nuestra primera cita</h4>
+              </div>
+            </div>
+            <p>Entre risas y una larga conversación, nos dimos cuenta de lo increíble que era pasar tiempo juntos.</p>
+          </div>
+        </div>
+
+        <div class="tarjeta-linea">
+          <div class="punto-linea"></div>
+          <div class="contenido-linea">
+            <div class="header-linea">
+              <img src="fotos/hito3.jpg" class="avatar-linea" alt="El inicio de nuestra historia">
+              <div>
+                <span class="fecha-linea">19 DE OCTUBRE</span>
+                <h4 class="titulo-serif">El inicio de nuestra historia</h4>
+              </div>
+            </div>
+            <p>El día que decidimos dar el paso y empezar oficialmente nuestro viaje juntos.</p>
+          </div>
+        </div>
+
+        <div class="tarjeta-linea">
+          <div class="punto-linea"></div>
+          <div class="contenido-linea">
+            <div class="header-linea">
+              <img src="fotos/hito4.jpg" class="avatar-linea" alt="Nuestro 1er Mes">
+              <div>
+                <span class="fecha-linea">HOY</span>
+                <h4 class="titulo-serif">Nuestro 1er Mes</h4>
+              </div>
+            </div>
+            <p>Celebramos nuestro primer mes juntos, recordando cada momento especial y mirando todo lo hermoso que viene.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- QUIZ INTERACTIVO -->
+      <section class="seccion trivia fade-in-scroll">
+        <p class="tag-seccion">PREGUNTAS</p>
+        <h3 class="titulo-serif">Una última sorpresa 🎁</h3>
+        <div id="quiz-container">
+          <p id="pregunta-texto">¿Dónde fue nuestra primera cita?</p>
+          <div class="opciones">
+            <button class="btn-opcion" onclick="responder(this, false)">En el parque</button>
+            <button class="btn-opcion" onclick="responder(this, true)">En el cine</button>
+            <button class="btn-opcion" onclick="responder(this, false)">En un restaurante</button>
+          </div>
+        </div>
+
+        <!-- RECOMPENSA FINAL -->
+        <div id="premio" class="hidden">
+          <div class="vale-regalo pulse-animation">
+            <p class="tag-vale">VALE ESPECIAL 🎟️</p>
+            <h4 class="titulo-serif">❤️ Vale por una salida / cena especial juntos</h4>
+            <p>Con todo mi cariño, Jhon.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
