@@ -82,6 +82,7 @@ body {
   stroke: #e91e63;
   stroke-width: 1.8;
   transition: fill 0.8s ease, stroke 0.8s ease;
+  pointer-events: none; /* Asegura que el clic active el contenedor div */
 }
 
 #corazon-btn.llenar .corazon-svg {
@@ -329,6 +330,9 @@ body {
 }
 
 .fade-in-scroll.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
   opacity: 1 !important;
   transform: translateY(0) !important;
 }
