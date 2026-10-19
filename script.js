@@ -1,127 +1,345 @@
-// 1. ANIMACIÓN DEL CORAZÓN Y CAMBIO DE PANTALLA
-function animarCorazon() {
-    const corazonBtn = document.getElementById('corazon-btn');
-    const bienvenida = document.getElementById('pantalla-bienvenida');
-    const principal = document.getElementById('pantalla-principal');
-
-    // Activa el llenado del corazón
-    corazonBtn.classList.add('llenar');
-
-    // Oculta la bienvenida y muestra el contenido principal
-    setTimeout(() => {
-        bienvenida.classList.add('hidden');
-        bienvenida.classList.remove('active');
-
-        principal.classList.add('active');
-        principal.classList.remove('hidden');
-
-        // Reproducir música
-        const audio = document.getElementById('cancion');
-        if (audio) {
-            audio.play().catch(e => console.log("Audio block:", e));
-        }
-
-        // Forzamos la visibilidad de los primeros elementos
-        revisarScroll();
-    }, 800);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
-// 2. REVELACIÓN AL HACER SCROLL
-function revisarScroll() {
-    const elementos = document.querySelectorAll('.fade-in-scroll');
-    const alturaPantalla = window.innerHeight;
-
-    elementos.forEach(el => {
-        const posicionTop = el.getBoundingClientRect().top;
-        if (posicionTop < alturaPantalla - 30) {
-            el.classList.add('visible');
-        }
-    });
+body {
+  background: linear-gradient(180deg, #fce4ec 0%, #f8bbd0 100%);
+  color: #4a4a4a;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-window.addEventListener('scroll', revisarScroll);
-
-// 3. CARRUSEL CONTINUO (5 FOTOS)
-const fotos = [
-    'fotos/foto1.jpg',
-    'fotos/foto2.jpg',
-    'fotos/foto3.jpg',
-    'fotos/foto4.jpg',
-    'fotos/foto5.jpg'
-];
-
-let fotoActual = 0;
-
-function cambiarFoto(direccion) {
-    fotoActual += direccion;
-    if (fotoActual >= fotos.length) {
-        fotoActual = 0;
-    }
-    if (fotoActual < 0) {
-        fotoActual = fotos.length - 1;
-    }
-    
-    const carruselImg = document.getElementById('carrusel-img');
-    if (carruselImg) {
-        carruselImg.src = fotos[fotoActual];
-    }
+.pantalla {
+  width: 100%;
+  max-width: 414px;
+  padding: 20px;
 }
 
-// Cambia automáticamente de foto cada 3.5 segundos
-setInterval(() => {
-    cambiarFoto(1);
-}, 3500);
-
-// 4. CONTROL DEL REPRODUCTOR DE MÚSICA
-function reproducirMusica() {
-    const cancion = document.getElementById('cancion');
-    const btnPlay = document.getElementById('btn-play');
-
-    if (cancion.paused) {
-        cancion.play();
-        if (btnPlay) btnPlay.innerText = '⏸ Pausar Canción';
-    } else {
-        cancion.pause();
-        if (btnPlay) btnPlay.innerText = '▶ Escuchar nuestra canción';
-    }
+/* Regla indispensable para ocultar elementos */
+.hidden {
+  display: none !important;
 }
 
-// 5. TRIVIA INTERACTIVA (3 PREGUNTAS)
-const respuestasCorrectas = {
-    p1: 'b',
-    p2: 'b',
-    p3: 'b'
-};
+/* --- COLORES Y TEXTOS --- */
+.titulo-principal, .titulo-destacado, .titulo-seccion, .titulo-hito, .titulo-cancion {
+  color: #c2185b;
+  font-weight: 700;
+}
 
-function verificarTrivia() {
-    let correctas = 0;
-    const totalPreguntas = 3;
+.remitente {
+  color: #c2185b;
+  font-weight: 600;
+  margin-top: 4px;
+}
 
-    for (let i = 1; i <= totalPreguntas; i++) {
-        const opciones = document.getElementsByName('p' + i);
-        for (let opcion of opciones) {
-            if (opcion.checked && opcion.value === respuestasCorrectas['p' + i]) {
-                correctas++;
-            }
-        }
-    }
+/* --- PANTALLA BIENVENIDA --- */
+#pantalla-bienvenida {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 90vh;
+}
 
-    const resultadoDiv = document.getElementById('resultado-trivia');
-    if (resultadoDiv) {
-        resultadoDiv.classList.remove('hidden');
-        if (correctas === totalPreguntas) {
-            resultadoDiv.style.backgroundColor = '#e8f5e9';
-            resultadoDiv.style.color = '#2e7d32';
-            resultadoDiv.innerHTML = '✨ ¡Increíble! Acertaste todas las preguntas. ¡Ganaste el Vale Especial!';
-            
-            const valeRegalo = document.getElementById('vale-regalo');
-            if (valeRegalo) {
-                valeRegalo.classList.remove('hidden');
-            }
-        } else {
-            resultadoDiv.style.backgroundColor = '#ffebee';
-            resultadoDiv.style.color = '#c62828';
-            resultadoDiv.innerHTML = `Tuviste ${correctas} de ${totalPreguntas} correctas. ¡Inténtalo de nuevo, mi amor! 💕`;
-        }
-    }
+.tarjeta-bienvenida {
+  background: #ffffff;
+  padding: 40px 25px;
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(194, 24, 91, 0.08);
+  width: 100%;
+}
+
+.subtitulo {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #8c8c8c;
+  margin-bottom: 12px;
+}
+
+.instruccion {
+  font-size: 13px;
+  color: #666;
+  margin-top: 20px;
+}
+
+/* --- CORAZÓN SVG --- */
+#corazon-btn {
+  width: 75px;
+  height: 75px;
+  margin: 20px auto 0 auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#corazon-btn:hover {
+  transform: scale(1.12);
+}
+
+.corazon-svg {
+  width: 100%;
+  height: 100%;
+  fill: transparent;
+  stroke: #e91e63;
+  stroke-width: 1.8;
+  transition: fill 0.8s ease, stroke 0.8s ease;
+}
+
+#corazon-btn.llenar .corazon-svg {
+  fill: #e91e63;
+  stroke: #e91e63;
+  animation: latido 0.6s infinite alternate;
+}
+
+@keyframes latido {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); }
+}
+
+/* --- SECCIONES Y CONTENEDORES --- */
+.seccion {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.tag-seccion {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #8c8c8c;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header-regalo {
+  text-align: center;
+  margin: 10px 0 20px 0;
+}
+
+.header-regalo h2 {
+  font-size: 28px;
+}
+
+.fecha-badge {
+  display: inline-block;
+  background-color: #f8bbd0;
+  color: #c2185b;
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* --- BOTONES --- */
+.btn-rosa {
+  background-color: #f48fb1;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-rosa:hover {
+  background-color: #e91e63;
+}
+
+.btn-rosa:active {
+  transform: scale(0.95);
+}
+
+/* --- CARRUSEL --- */
+.carrusel .img-wrapper {
+  overflow: hidden;
+  border-radius: 16px;
+  margin-top: 10px;
+}
+
+.carrusel img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.controles-carrusel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+#contador-fotos {
+  font-size: 12px;
+  color: #888;
+  font-weight: 600;
+}
+
+/* --- REPRODUCTOR DE AUDIO --- */
+.card-audio {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #fce4ec;
+  padding: 14px;
+  border-radius: 18px;
+  margin-top: 10px;
+}
+
+.cover-audio {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.info-audio h4 {
+  font-size: 15px;
+}
+
+.artista {
+  font-size: 11px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.btn-play {
+  padding: 6px 14px;
+  font-size: 11px;
+}
+
+/* --- LÍNEA DE TIEMPO --- */
+.tarjeta-linea {
+  position: relative;
+  padding-left: 20px;
+  margin-top: 18px;
+  border-left: 2px solid #f48fb1;
+}
+
+.punto-linea {
+  position: absolute;
+  left: -6px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  background-color: #c2185b;
+  border-radius: 50%;
+}
+
+.contenido-linea {
+  background-color: #fce4ec;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.header-linea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.avatar-linea {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f48fb1;
+}
+
+.fecha-linea {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #777;
+  font-weight: 600;
+}
+
+.contenido-linea p {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* --- CARTA Y TRIVIA --- */
+.texto-carta {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555;
+  margin-top: 8px;
+}
+
+.instruccion-cita {
+  font-size: 13px;
+  font-weight: 600;
+  color: #c2185b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.btn-opcion {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #fce4ec;
+  border: 1px solid #f8bbd0;
+  border-radius: 20px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-plan:hover {
+  background-color: #f48fb1;
+  color: white;
+}
+
+.btn-opcion.correcta {
+  background-color: #4caf50 !important;
+  color: white;
+  border-color: #4caf50;
+}
+
+.btn-opcion.incorrecta {
+  background-color: #f44336 !important;
+  color: white;
+  border-color: #f44336;
+}
+
+.vale-regalo {
+  border: 2px dashed #c2185b;
+  padding: 20px;
+  border-radius: 18px;
+  text-align: center;
+  background-color: #fce4ec;
+  margin-top: 15px;
+}
+
+.tag-vale {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888;
+}
+
+/* --- ANIMACIONES --- */
+.fade-in-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in-scroll.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
